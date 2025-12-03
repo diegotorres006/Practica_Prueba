@@ -1,0 +1,103 @@
+<section class="min-h-screen bg-base-200 p-4 flex justify-center items-center">
+  
+  @if (pokemonResource.isLoading()) {
+    <div class="flex flex-col items-center gap-2">
+      <span class="loading loading-spinner loading-lg text-primary"></span>
+      <p class="text-base-content/70 animate-pulse">Cargando datos del Pokémon...</p>
+    </div>
+  }
+
+  @if (pokemonResource.error()) {
+    <div role="alert" class="alert alert-error max-w-md shadow-lg">
+      <svg xmlns="http://www.w3.org/2000/svg" class="stroke-current shrink-0 h-6 w-6" fill="none" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 14l2-2m0 0l2-2m-2 2l-2-2m2 2l2 2m7-2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+      <span>No se pudo cargar el Pokémon. Intenta nuevamente.</span>
+      <a routerLink="/home" class="btn btn-sm btn-ghost">Volver</a>
+    </div>
+  }
+
+  @if (pokemonResource.value(); as poke) {
+    <article class="card w-full max-w-4xl bg-base-100 shadow-2xl overflow-hidden border border-base-200">
+      
+      <header class="bg-primary text-primary-content p-6 text-center relative overflow-hidden">
+        <div class="absolute -top-10 -left-10 w-40 h-40 bg-white/10 rounded-full blur-2xl"></div>
+        
+        <h1 class="text-4xl md:text-5xl font-extrabold capitalize tracking-wider drop-shadow-md z-10 relative">
+          {{ poke.name }}
+        </h1>
+        
+        <div class="flex flex-wrap justify-center gap-2 mt-4 z-10 relative">
+          @for (type of poke.types; track type.type.name) {
+            <span class="badge badge-lg bg-white/25 border-white/20 text-white font-bold px-4 py-3 capitalize">
+              {{ type.type.name }}
+            </span>
+          }
+        </div>
+      </header>
+
+      <div class="flex flex-col md:flex-row">
+        
+        <figure class="bg-gradient-to-b from-base-200 to-base-100 p-8 md:w-5/12 flex justify-center items-center relative group">
+          <img 
+            [src]="poke.sprites.other['official-artwork'].front_default || poke.sprites.front_default" 
+            [alt]="poke.name" 
+            class="w-64 h-64 object-contain drop-shadow-2xl group-hover:scale-110 transition-transform duration-500 ease-in-out" 
+          />
+        </figure>
+
+        <section class="card-body md:w-7/12 p-6 md:p-8">
+          
+          <div class="grid grid-cols-2 gap-4 mb-6">
+            <div class="bg-base-200/50 rounded-xl p-3 flex flex-col items-center border border-base-200">
+              <span class="text-xs font-bold uppercase opacity-60">Altura</span>
+              <span class="text-xl font-bold">{{ poke.height / 10 }} m</span>
+            </div>
+            
+            <div class="bg-base-200/50 rounded-xl p-3 flex flex-col items-center border border-base-200">
+              <span class="text-xs font-bold uppercase opacity-60">Peso</span>
+              <span class="text-xl font-bold">{{ poke.weight / 10 }} kg</span>
+            </div>
+
+            <div class="bg-base-200/50 rounded-xl p-3 flex flex-col items-center border border-base-200">
+              <span class="text-xs font-bold uppercase opacity-60">Exp. Base</span>
+              <span class="text-xl font-bold text-primary">{{ poke.base_experience }}</span>
+            </div>
+
+            <div class="bg-base-200/50 rounded-xl p-3 flex flex-col items-center border border-base-200">
+              <span class="text-xs font-bold uppercase opacity-60">Movimientos</span>
+              <span class="text-xl font-bold">{{ poke.moves.length }}</span>
+            </div>
+          </div>
+
+          <div class="divider text-xs font-bold uppercase opacity-50 mb-4">Estadísticas de Combate</div>
+          
+          <ul class="space-y-3">
+            @for (stat of poke.stats; track stat.stat.name) {
+              <li class="flex items-center gap-3 group">
+                <span class="w-32 text-xs font-bold uppercase truncate opacity-70 group-hover:opacity-100 transition-opacity" 
+                      [title]="stat.stat.name">
+                  {{ stat.stat.name }}
+                </span>
+                
+                <div class="flex-1 h-3 bg-base-200 rounded-full overflow-hidden">
+                  <div class="h-full bg-primary transition-all duration-1000 ease-out rounded-full" 
+                       [style.width.%]="(stat.base_stat / 150) * 100"></div>
+                </div>
+                
+                <span class="text-xs font-mono font-bold w-8 text-right">{{ stat.base_stat }}</span>
+              </li>
+            }
+          </ul>
+          
+          <div class="card-actions justify-end mt-8 pt-4 border-t border-base-200">
+            <a routerLink="/home" class="btn btn-outline btn-block gap-2 group">
+              <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-arrow-left transition-transform group-hover:-translate-x-1" viewBox="0 0 16 16"> 
+                <path fill-rule="evenodd" d="M15 8a.5.5 0 0 0-.5-.5H2.707l3.147-3.146a.5.5 0 1 0-.708-.708l-4 4a.5.5 0 0 0 0 .708l4 4a.5.5 0 0 0 .708-.708L2.707 8.5H14.5A.5.5 0 0 0 15 8z"/> 
+              </svg>
+              Volver al Listado
+            </a>
+          </div>
+        </section>
+      </div>
+    </article>
+  }
+</section>
