@@ -11,9 +11,7 @@ import { RouterLink } from '@angular/router';
 })
 export class PokemonDetailPageComponent {
   id = input.required<string>(); 
-
   private pokemonService = inject(PokemonService);
-
   pokemonResource = rxResource<any, any>({
     request: () => ({ id: this.id() }),
     loader: ({ request }: any) => {

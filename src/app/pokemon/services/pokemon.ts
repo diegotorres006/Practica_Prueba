@@ -13,6 +13,7 @@ export class PokemonService {
     return this.http.get<any>(`${this.apiUrl}?offset=${offset}&limit=${limit}`);
   }
 
+  
   getPokemonDetail(idOrName: string): Observable<any> {
     return this.http.get<any>(`${this.apiUrl}/${idOrName}`);
   }

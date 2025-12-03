@@ -1,11 +1,11 @@
 import { Routes } from '@angular/router';
-import { LoginPageComponent } from './auth/login-page/login-page';
+import { AuthLoginComponent } from './auth/login-page/login-page';
 import { HomePageComponent } from './pokemon/pages/home-page/home-page';
 import { PokemonService } from './pokemon/services/pokemon';
 import { PokemonDetailPageComponent } from './pokemon/pages/pokemon-detail-page/pokemon-detail-page';
 
 export const routes: Routes = [
-  { path: 'login', component: LoginPageComponent },
+  { path: 'login', component: AuthLoginComponent },
   
   { path: 'home', component: HomePageComponent },
   

@@ -1,39 +1,49 @@
 import { Component, inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { Router } from '@angular/router';
 import { FormUtils } from '../../shared/utils/form-utils';
 
 @Component({
-  selector: 'app-login-page',
+  selector: 'app-auth-login',
   standalone: true,
-  imports: [ReactiveFormsModule],
+  imports: [CommonModule, ReactiveFormsModule],
   templateUrl: './login-page.html',
 })
-export class LoginPageComponent {
-  private fb = inject(FormBuilder);
-  private router = inject(Router);
+export class AuthLoginComponent {
+  private fbSvc = inject(FormBuilder);
+  private navSvc = inject(Router);
 
-  private readonly USER = { email: 'usuario@ups.edu.ec', password: '123456' };
+  private readonly CREDENCIALES_DEMO = {
+    correo: 'usuario@ups.edu.ec',
+    contrasena: '123456'
+  };
 
-  loginForm: FormGroup = this.fb.group({
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.minLength(6)]]
+  authForm: FormGroup = this.fbSvc.group({
+    correo: ['', [Validators.required, Validators.email]],
+    contrasena: ['', [Validators.required, Validators.minLength(6)]],
+    recordar: [false]
   });
 
-  getError(field: string): string {
-    return FormUtils.getErrorMessage(this.loginForm.get(field));
+  campoError(field: string): string {
+    return FormUtils.getErrorMessage(this.authForm.get(field));
   }
 
-  onSubmit() {
-    if (this.loginForm.invalid) {
-      this.loginForm.markAllAsTouched();
+  isInvalid(field: string): boolean {
+    const ctrl = this.authForm.get(field);
+    return !!(ctrl && ctrl.touched && ctrl.invalid);
+  }
+
+  handleLogin(): void {
+    if (this.authForm.invalid) {
+      this.authForm.markAllAsTouched();
       return;
     }
 
-    const { email, password } = this.loginForm.value;
+    const { correo, contrasena } = this.authForm.value;
 
-    if (email === this.USER.email && password === this.USER.password) {
-      this.router.navigate(['/home']);
+    if (correo === this.CREDENCIALES_DEMO.correo && contrasena === this.CREDENCIALES_DEMO.contrasena) {
+      this.navSvc.navigate(['/home']);
     } else {
       alert('Credenciales incorrectas');
     }
